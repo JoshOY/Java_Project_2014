@@ -38,6 +38,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -577,9 +579,76 @@ public class WinMain {
 		JMenuItem mntmScan = new JMenuItem("Scan...");
 		mntmScan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScanWin scanwin = new ScanWin();
-				searchingText = scanwin.showScanDialog(frmTextEditor);
-				System.out.println(searchingText);
+				final ScanWin scanwin = new ScanWin();
+				scanwin.setVisible(true);
+				scanwin.scannextBtn.addMouseListener(new MouseAdapter() {
+					//现在开始搜索部分
+					@Override
+					public void mouseClicked(MouseEvent e) {
+					if((scanwin.listavailable == true) && (searchingText.equals(scanwin.scantxtfield.getText()) ) ) {
+						//case:向下检索
+						if(scanwin.downsearch == true) {
+							int order = scanwin.indexlist.indexOf(scanwin.currentindex);
+							if(order == scanwin.indexlist.size() - 1)
+								JOptionPane.showMessageDialog(null, "This is the last string.", "Alert", JOptionPane.WARNING_MESSAGE);
+							else {
+								scanwin.currentindex = scanwin.indexlist.get(order + 1);
+								txtArea.requestFocus();
+								txtArea.setSelectionStart(scanwin.currentindex);
+								txtArea.setSelectionEnd(scanwin.currentindex + searchingText.length());
+							}
+						}
+						//case:向上检索
+						else {
+							int order = scanwin.indexlist.indexOf(scanwin.currentindex);
+							if(order == 0)
+								JOptionPane.showMessageDialog(null, "This is the first string.", "Alert", JOptionPane.WARNING_MESSAGE);
+							else {
+								scanwin.currentindex = scanwin.indexlist.get(order - 1);
+								txtArea.requestFocus();
+								txtArea.setSelectionStart(scanwin.currentindex);
+								txtArea.setSelectionEnd(scanwin.currentindex + searchingText.length());
+							}
+						}
+					}
+					else {
+						searchingText = scanwin.scantxtfield.getText();
+						scanwin.listavailable = false;
+						if(searchingText.equals(""))
+							JOptionPane.showMessageDialog(null, "String can't be null.", "Alert", JOptionPane.WARNING_MESSAGE);
+						else {
+							scanwin.currentindex = txtArea.getText().indexOf(searchingText);
+							if(scanwin.currentindex == -1)
+								JOptionPane.showMessageDialog(null, "Cannot find string: " + searchingText, "Alert", JOptionPane.WARNING_MESSAGE);
+							
+							else {
+								int lastindex = scanwin.currentindex;
+								scanwin.indexlist.add(scanwin.currentindex);
+								while(true) {
+									String str = txtArea.getText().substring(lastindex + searchingText.length(), txtArea.getText().length());
+									System.out.println(str);
+									scanwin.currentindex = str.indexOf(searchingText);
+									if(scanwin.currentindex == -1)
+										break;
+									else {
+										scanwin.indexlist.add((lastindex + searchingText.length()) + scanwin.currentindex);
+										lastindex += scanwin.currentindex + searchingText.length();
+										System.out.println(scanwin.indexlist.toString());
+									}
+								}
+								scanwin.currentindex = scanwin.indexlist.get(0);
+								txtArea.requestFocus();
+								txtArea.setSelectionStart(scanwin.currentindex);
+								txtArea.setSelectionEnd(scanwin.currentindex + searchingText.length());
+								scanwin.listavailable = true;
+							}
+						}
+					}
+								
+					}
+					//搜索部分结束				
+				});
+				
 			}
 		});
 		mnEdit.add(mntmScan);
@@ -594,7 +663,6 @@ public class WinMain {
 		mntmTurnToLine.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				////////////////////////////////////////////////////////////////////
 				final TurnToLinePanel turntolinewin = new TurnToLinePanel();
 				turntolinewin.setVisible(true);
 				turntolinewin.spinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), new Integer(txtArea.getLineCount()), new Integer(1)));
@@ -615,8 +683,6 @@ public class WinMain {
 						turntolinewin.validate();
 					}
 				});
-				
-				////////////////////////////////////////////////////////////////////
 			}
 		});
 		mnEdit.add(mntmTurnToLine);

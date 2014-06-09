@@ -1,22 +1,29 @@
 package MsgboxPack;
 
 import javax.swing.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScanWin extends JDialog {
 	
 	final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField scantxtfield;
-	JRadioButton uprbtn;
-	JRadioButton downbtn;
+	public JTextField scantxtfield;
+	public JRadioButton uprbtn;
+	public JRadioButton downbtn;
+	public JButton scannextBtn = new JButton("Scan next");
 	
 
 	public String searchingtxt = "";
 	public boolean downsearch = true;
+	public boolean listavailable = false;
+	public int currentindex = -1;
+	public List<Integer> indexlist = new ArrayList();
 	
 	public ScanWin() {
 		setResizable(false);
@@ -76,7 +83,6 @@ public class ScanWin extends JDialog {
 		 * Radio button action end
 		 **/
 		
-		JButton scannextBtn = new JButton("Scan next");
 		scannextBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				searchingtxt = scantxtfield.getText();
