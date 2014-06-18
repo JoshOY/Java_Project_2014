@@ -2,10 +2,8 @@ package MainPack;
 
 import MsgboxPack.AboutPanel;
 import MsgboxPack.MQFontChooser;
-import MsgboxPack.ScanWin;
+import MsgboxPack.ScanPanel;
 import MsgboxPack.TurnToLinePanel;
-
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,8 +36,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -54,11 +50,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Utilities;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import fileTransPack.RThread;
+import fileTransPack.SThread;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowListener;
 
 
 public class WinMain {
@@ -66,27 +62,21 @@ public class WinMain {
 	private JFrame frmTextEditor;
 	public final JTextArea txtArea = new JTextArea();
 	public final JLabel LineInfoText = new JLabel("Row 1, Column 1");
+	
 	/* Using these vars to save my settings */
 	private boolean BFileSaved = true;
 	String strFileName = "Unnamed";
 	public String searchingText = "";
+	private JPanel LineInfoPane;
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WinMain window = new WinMain();
-					window.frmTextEditor.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		WinMain window = new WinMain();
+		window.frmTextEditor.setVisible(true);
 	}
-
+	
 	/**
 	 * Create the application.
 	 */
@@ -140,7 +130,7 @@ public class WinMain {
 		       }
 		   });
 		
-		JPanel LineInfoPane = new JPanel();
+		LineInfoPane = new JPanel();
 		LineInfoPane.setBorder(null);
 		frmTextEditor.getContentPane().add(LineInfoPane, BorderLayout.SOUTH);
 		
@@ -579,7 +569,7 @@ public class WinMain {
 		JMenuItem mntmScan = new JMenuItem("Scan...");
 		mntmScan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final ScanWin scanwin = new ScanWin();
+				final ScanPanel scanwin = new ScanPanel();
 				scanwin.setVisible(true);
 				scanwin.scannextBtn.addMouseListener(new MouseAdapter() {
 					//现在开始搜索部分
@@ -698,10 +688,12 @@ public class WinMain {
 				if(chckbxmntmAutoLineWrap.getState() == true)
 				{
 					txtArea.setLineWrap(true);
+					getLineInfoPane().setVisible(false);
 				}
 				else
 				{
 					txtArea.setLineWrap(false);
+					getLineInfoPane().setVisible(true);
 				}
 			}
 		});
@@ -725,6 +717,35 @@ public class WinMain {
 		});
 		
 		mnPattern.add(mntmFont);
+		
+		JMenu mnTextTransfer = new JMenu("TextTransfer");
+		menuBar.add(mnTextTransfer);
+		
+		JMenuItem mntmLaunchSender = new JMenuItem("Launch sender...");
+		mntmLaunchSender.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new SThread(txtArea).start();
+				/*
+				SenderFrame senderfrm = new SenderFrame(txtArea);
+				senderfrm.setBounds(300, 300, 550, 400);
+				senderfrm.setVisible(true);
+				*/
+			}
+		});
+		mnTextTransfer.add(mntmLaunchSender);
+		
+		JMenuItem mntmLaunchReceiver = new JMenuItem("Launch receiver...");
+		mntmLaunchReceiver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new RThread().start();
+				/*
+				ReceiverFrame receiverfrm = new ReceiverFrame();
+				receiverfrm.setBounds(300, 300, 550, 400);
+				receiverfrm.setVisible(true);
+				*/
+			}
+		});
+		mnTextTransfer.add(mntmLaunchReceiver);
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -775,4 +796,7 @@ public class WinMain {
 	        }
 	        return -1;
 	    }
+	public JPanel getLineInfoPane() {
+		return LineInfoPane;
+	}
 }
