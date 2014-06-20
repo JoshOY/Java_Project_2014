@@ -1,4 +1,4 @@
-package MsgboxPack;
+package msgboxPack;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;

@@ -1,4 +1,4 @@
-package MsgboxPack;
+package msgboxPack;
 
 import javax.swing.*;
 

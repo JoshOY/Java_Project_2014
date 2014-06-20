@@ -1,9 +1,4 @@
-package MainPack;
-
-import MsgboxPack.AboutPanel;
-import MsgboxPack.MQFontChooser;
-import MsgboxPack.ScanPanel;
-import MsgboxPack.TurnToLinePanel;
+package mainPack;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -50,6 +45,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Utilities;
 
+import sqlPack.SQLImportFrame;
+import msgboxPack.AboutPanel;
+import msgboxPack.MQFontChooser;
+import msgboxPack.ScanPanel;
+import msgboxPack.TurnToLinePanel;
 import fileTransPack.RThread;
 import fileTransPack.SThread;
 
@@ -746,6 +746,17 @@ public class WinMain {
 			}
 		});
 		mnTextTransfer.add(mntmLaunchReceiver);
+		
+		JMenu mnSql = new JMenu("SQL");
+		menuBar.add(mnSql);
+		
+		JMenuItem mntmImportDataFrom = new JMenuItem("Import data from MySQL...");
+		mntmImportDataFrom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new SQLImportFrame(txtArea);
+			}
+		});
+		mnSql.add(mntmImportDataFrom);
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
