@@ -45,9 +45,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Utilities;
 
+import sqlPack.SQLExportFrame;
 import sqlPack.SQLImportFrame;
 import msgboxPack.AboutPanel;
 import msgboxPack.MQFontChooser;
+import msgboxPack.ReplacePanel;
 import msgboxPack.ScanPanel;
 import msgboxPack.TurnToLinePanel;
 import fileTransPack.RThread;
@@ -560,12 +562,6 @@ public class WinMain {
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		
-		JMenuItem mntmReplace = new JMenuItem("Replace...");
-		mnEdit.add(mntmReplace);
-		
-		JSeparator separator_1 = new JSeparator();
-		mnEdit.add(separator_1);
-		
 		JMenuItem mntmScan = new JMenuItem("Scan...");
 		mntmScan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -643,8 +639,13 @@ public class WinMain {
 		});
 		mnEdit.add(mntmScan);
 		
-		JMenuItem mntmScanNext = new JMenuItem("Scan next");
-		mnEdit.add(mntmScanNext);
+		JMenuItem mntmReplace = new JMenuItem("Replace...");
+		mntmReplace.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ReplacePanel(txtArea);
+			}
+		});
+		mnEdit.add(mntmReplace);
 		
 		JSeparator separator_2 = new JSeparator();
 		mnEdit.add(separator_2);
@@ -737,7 +738,7 @@ public class WinMain {
 		JMenuItem mntmLaunchReceiver = new JMenuItem("Launch receiver...");
 		mntmLaunchReceiver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new RThread().start();
+				new RThread(txtArea).start();
 				/*
 				ReceiverFrame receiverfrm = new ReceiverFrame();
 				receiverfrm.setBounds(300, 300, 550, 400);
@@ -757,6 +758,14 @@ public class WinMain {
 			}
 		});
 		mnSql.add(mntmImportDataFrom);
+		
+		JMenuItem mntmExportDataTo = new JMenuItem("Export data to MySQL...");
+		mntmExportDataTo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new SQLExportFrame(txtArea);
+			}
+		});
+		mnSql.add(mntmExportDataTo);
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -799,7 +808,7 @@ public class WinMain {
 	        return rn;
 	    }
 	 //Get Column
-	    public static int getColumn(int pos, JTextComponent editor) {
+	public static int getColumn(int pos, JTextComponent editor) {
 	        try {
 	            return pos-Utilities.getRowStart(editor, pos)+1;
 	        } catch (BadLocationException e) {
@@ -807,6 +816,7 @@ public class WinMain {
 	        }
 	        return -1;
 	    }
+	
 	public JPanel getLineInfoPane() {
 		return LineInfoPane;
 	}

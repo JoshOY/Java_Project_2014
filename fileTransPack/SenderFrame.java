@@ -26,7 +26,7 @@ public class SenderFrame extends JFrame{
 	public SenderFrame(JTextArea sendingtxtarea) {
 		txtArea = sendingtxtarea;
 		setResizable(false);
-		setTitle("Client");
+		setTitle("Text Sender");
 		SpringLayout springLayout = new SpringLayout();
 		getContentPane().setLayout(springLayout);
 		

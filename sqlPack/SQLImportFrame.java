@@ -93,7 +93,6 @@ public class SQLImportFrame extends JFrame {
 		springLayout.putConstraint(SpringLayout.WEST, tfPassword, 0, SpringLayout.WEST, tfUrl);
 		springLayout.putConstraint(SpringLayout.EAST, tfPassword, 0, SpringLayout.EAST, tfUrl);
 		tfPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		tfPassword.setEchoChar('*');
 		getContentPane().add(tfPassword);
 		
 		JLabel lblCommand = new JLabel("Command");

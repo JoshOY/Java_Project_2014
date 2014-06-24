@@ -28,8 +28,9 @@ public class ReceiverFrame extends JFrame{
 	private final JButton btnStopListening = new JButton("Stop Listening");
 	private Boolean breakflag = false;
 	private ReceiverThread rt;
+	private final JButton btnPaste = new JButton("Paste");
 	
-	public ReceiverFrame() {
+	public ReceiverFrame(final JTextArea txtArea) {
 		textField.setText("10086");
 		textField.setColumns(10);
 		setTitle("Text Receiver");
@@ -46,6 +47,18 @@ public class ReceiverFrame extends JFrame{
 		
 		panel.add(btnStopListening);
 		btnStopListening.setEnabled(false);
+		//Add event of clicking paste button
+		btnPaste.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				String text = textArea.getText();
+				if(txtArea.getText().equals(""))
+					txtArea.setText(text);
+				else
+					txtArea.append("\n" + text);
+			}
+		});
+		
+		panel.add(btnPaste);
 		
 		//Add event of clicking start receiver
 		btnStartListening.addActionListener(new ActionListener() {

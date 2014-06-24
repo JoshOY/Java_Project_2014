@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -123,6 +124,7 @@ public class MQFontChooser extends JDialog {
 	/**
 	 * 初始化组件
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void init(){
 		// 获得系统字体
 		GraphicsEnvironment eq = GraphicsEnvironment.getLocalGraphicsEnvironment();
